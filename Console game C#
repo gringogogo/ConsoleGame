@@ -1,0 +1,97 @@
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine("Вы просыпаетесь в комнате...");
+        Console.Write("Введите имя персонажа: ");
+        string name = Console.ReadLine();
+
+        bool[] artifacts = new bool[3];
+        bool chestOpened = false;
+        int ventilationAttempts = 0; // Счетчик попыток открытия вентиляции
+
+        while (true)
+        {
+            Console.WriteLine($"\n{name}, осмотритесь вокруг. Доступные действия:");
+            Console.WriteLine("1) Открыть дверь");
+            Console.WriteLine("2) Заглянуть под кровать");
+            Console.WriteLine("3) Открыть ящик в углу комнаты");
+            Console.WriteLine("4) Открыть вентиляцию");
+            Console.WriteLine("5) Взглянуть на тумбочку");
+            Console.WriteLine("6) Взглянуть на статую рядом с дверью");
+
+            Console.Write("Ваш выбор: ");
+            string choice = Console.ReadLine();
+
+            switch (choice)
+            {
+                case "1":
+                    if (chestOpened)
+                    {
+                        Console.WriteLine("Вы используете ключ и открываете дверь. Поздравляем, вы выбрались!");
+                        Console.WriteLine("Нажмите любую клавишу для выхода...");
+                        Console.ReadKey();
+                        return;
+                    }
+                    Console.WriteLine("Дверь заперта. Нужен ключ.");
+                    break;
+
+                case "2":
+                    Console.WriteLine(artifacts[0] ? "Под кроватью больше ничего нет." : "Под кроватью найден первый артефакт!\nАртефакт добавлен в инвентарь. ");
+                    artifacts[0] = true;
+                    break;
+
+                case "3":
+                    if (!chestOpened)
+                    {
+                        if (artifacts[0] && artifacts[1] && artifacts[2])
+                        {
+                            Console.WriteLine("Статуя активирована артефактами. В ящике найден ключ!\nКлюч добавлен в инвентарь. ");
+                            chestOpened = true;
+                        }
+                        else Console.WriteLine("Ящик заперт. Похоже, нужно активировать статую.");
+                    }
+                    else Console.WriteLine("Ящик уже открыт.");
+                    break;
+
+                case "4":
+                    if (artifacts[1])
+                    {
+                        Console.WriteLine("В вентиляции пусто.");
+                    }
+                    else
+                    {
+                        ventilationAttempts++;
+                        if (ventilationAttempts >= 3)
+                        {
+                            Console.WriteLine($"После нескольких попыток вам удалось открыть вентиляцию! Найден второй артефакт!\nАртефакт добавлен в инвентарь. ");
+                            artifacts[1] = true;
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Вы пытаетесь открыть вентиляцию... Попытка {ventilationAttempts} из 3");
+                            Console.WriteLine("Вентиляция не поддается. Нужно попробовать еще раз.");
+                        }
+                    }
+                    break;
+
+                case "5":
+                    Console.WriteLine(artifacts[2] ? "На тумбочке больше ничего нет." : "На тумбочке найден третий артефакт!\n Артефакт добавлен в инвентарь. ");
+                    artifacts[2] = true;
+                    break;
+
+                case "6":
+                    Console.WriteLine(artifacts[0] && artifacts[1] && artifacts[2] ?
+                        "Вы активировали статую с помощью трех артефактов!" :
+                        "Статуя неподвижна. Похоже, нужны артефакты.");
+                    break;
+
+                default:
+                    Console.WriteLine("Неизвестная команда. Попробуйте снова.");
+                    break;
+            }
+        }
+    }
+}
